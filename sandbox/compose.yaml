@@ -1,0 +1,19 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:15
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - FORGEJO__security__INSTALL_LOCK=true
+      - FORGEJO__service__DISABLE_REGISTRATION=true
+      - FORGEJO__server__ROOT_URL=http://localhost:3000/
+      - FORGEJO__server__DISABLE_SSH=true
+    volumes:
+      - forgejo-data:/data
+    ports:
+      # Only this machine can reach the sandbox.
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
+
+volumes:
+  forgejo-data:
