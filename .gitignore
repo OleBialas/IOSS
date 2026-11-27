@@ -4,6 +4,8 @@ sandbox/.env
 # Tour videos, cache and TTS voices
 tour/build/
 tour/voices/
+
+# Python byte code
 __pycache__/
 
 # Terraform state, variables and build output of the cloud launcher

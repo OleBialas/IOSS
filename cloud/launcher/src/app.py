@@ -349,10 +349,11 @@ def repo_path():
 
 
 def is_ready(host, timeout=3):
-    """Check that setup.py has created all seeded issues.
+    """Check that setup.py has created all issues.
 
-    setup.py creates the issues last, after the users and the repository, so
-    the count of issues tells whether setup is complete.
+    setup.py creates the seed issues and then the quest issue, after the
+    users, the repository and the webhook. So the count of issues tells
+    whether setup is complete. SEED_ISSUES includes the quest issue.
     """
     url = (
         f"http://{host}:3000/api/v1/repos/{repo_path()}/issues"

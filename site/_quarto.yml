@@ -1,0 +1,26 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "IOSS"
+  description: "Learn to contribute to research software in a safe sandbox."
+  site-url: https://florence-bockting.github.io/IOSS/
+  repo-url: https://github.com/florence-bockting/IOSS
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - get-started.qmd
+      - developers.qmd
+    right:
+      - icon: github
+        href: https://github.com/florence-bockting/IOSS
+        aria-label: IOSS on GitHub
+  page-footer:
+    center: "IOSS: Interactive Open Source Simulator"
+
+format:
+  html:
+    theme: cosmo
+    toc: true

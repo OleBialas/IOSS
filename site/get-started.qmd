@@ -1,0 +1,80 @@
+---
+title: "Get started"
+---
+
+The sandbox is a local [Forgejo](https://forgejo.org/) instance on your computer. It has the practice repository, the actors of the community and the CI. Nothing reaches GitHub.
+
+## Requirements
+
+- Docker with `docker compose`
+- Python 3.11 or later
+- Git
+
+::: {.callout-warning}
+The CI of the sandbox runs Docker in a privileged container. Do not start the sandbox on a computer where this is not allowed.
+:::
+
+## Start the sandbox
+
+Clone IOSS:
+
+```bash
+git clone https://github.com/florence-bockting/IOSS.git
+```
+
+Go to the sandbox folder:
+
+```bash
+cd IOSS/sandbox
+```
+
+Start Forgejo:
+
+```bash
+docker compose up -d
+```
+
+Create the users, the repository and the issues:
+
+```bash
+python3 setup.py
+```
+
+The first CI job takes about 5 minutes, because Docker downloads the images. Later jobs take less than 1 minute.
+
+## Log in
+
+1. Open <http://localhost:3000/tinystats/tinystats>.
+2. Log in as `newcomer`. The password is in the file `.env`:
+
+   ```bash
+   grep NEWCOMER_PASSWORD .env
+   ```
+
+## Play
+
+- **The tour** starts on your first visit to the repository. The **Start tour** button at the bottom right starts it again.
+- **The quest issue** is pinned in the issue list. It shows your tasks as a checklist. When you finish a task, the bot ticks the box and names the next task.
+- **The actors** answer you. For example, the maintainer assigns an issue to you when you write that you want to work on it.
+
+The steps of the game are in the [scenario file](https://github.com/florence-bockting/IOSS/blob/main/scenarios/first-contribution.md).
+
+## Start again
+
+::: {.callout-warning}
+This deletes all users, issues and pull requests of the sandbox.
+:::
+
+```bash
+docker compose down -v
+```
+
+```bash
+rm .env
+```
+
+Then start the sandbox again.
+
+## More information
+
+The [sandbox README](https://github.com/florence-bockting/IOSS/blob/main/sandbox/README.md) explains the CI, the tour and the quest in detail.

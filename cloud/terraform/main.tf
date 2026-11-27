@@ -33,7 +33,9 @@ locals {
     for f in fileset(local.repo_root, "{sandbox,seed}/**") : f
     if !startswith(basename(f), ".env") && !strcontains(f, "__pycache__")
   ]
-  seed_issues = length(fileset(local.repo_root, "seed/issues/*.md"))
+  # setup.py creates the seed issues, then the quest issue. When all of them
+  # exist, the sandbox is ready.
+  seed_issues = length(fileset(local.repo_root, "seed/issues/*.md")) + 1
 }
 
 # --- Network --------------------------------------------------------------
