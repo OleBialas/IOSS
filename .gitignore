@@ -1,2 +1,5 @@
 # Test passwords and tokens of the local sandbox
 sandbox/.env
+
+# Python byte code
+__pycache__/

@@ -11,6 +11,8 @@ services:
       - FORGEJO__actions__ENABLED=true
       # data.forgejo.org does not mirror astral-sh/setup-uv.
       - FORGEJO__actions__DEFAULT_ACTIONS_URL=https://github.com
+      # The default list blocks webhooks to private hosts.
+      - FORGEJO__webhook__ALLOWED_HOST_LIST=game-master
     volumes:
       - forgejo-data:/data
       # The repository tour. /data/gitea is the custom folder of Forgejo.
@@ -46,6 +48,22 @@ services:
         exec forgejo-runner daemon --config /data/config.yml
     depends_on:
       - dind
+    restart: unless-stopped
+
+  # The game master follows the quest of the newcomer. Forgejo sends it the
+  # webhook events. setup.py writes the variables to .env, and compose reads
+  # them from there.
+  game-master:
+    image: python:3.12-slim
+    environment:
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-}
+      - QUEST_ISSUE=${QUEST_ISSUE:-}
+    volumes:
+      - ./game-master:/app:ro
+    command: ["python", "-u", "/app/server.py"]
+    depends_on:
+      - forgejo
     restart: unless-stopped
 
 volumes:
