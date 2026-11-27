@@ -175,14 +175,6 @@ Then log in as `newcomer` and play the part that you changed.
 
 A maintainer merges the pull request after the review. A change to `site/` goes live on this website a few minutes after the merge.
 
-## LLM tools
-
-IOSS puts humans first, and so does its development. You can use an LLM to help you write code or text. Before you open a pull request:
-
-- Read and understand each line of the change.
-- Test the change yourself.
-- Say in the pull request which parts an LLM helped to write.
-
 ## License
 
 IOSS uses the [CC0 1.0 Universal](https://github.com/florence-bockting/IOSS/blob/main/LICENSE) license. When you contribute, you release your contribution under the same license.
