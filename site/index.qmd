@@ -6,53 +6,166 @@ toc: false
 
 ## Why IOSS
 
-Your first contribution to a research software project is hard.
+### Does any of this sound familiar?
 
-- **The technical side:** you set up the environment, find your way in the code and understand the dependencies.
-- **The social side:** you learn who does what, how issues, pull requests and reviews work, and what reviewers expect.
+- Are you a contributor looking at a new repository and wondering where on earth to begin?
 
-The documentation is often scattered. It assumes knowledge that a newcomer does not have yet. Feedback from peers and mentors is slow, so many learners ask an LLM and stop talking to people.
+- Do you ever feel overwhelmed by the number of folders, files, instructions and unfamiliar tools in a project?
 
-IOSS turns a real research software repository into a practice ground. You play the newcomer in a simulated community. Nothing that you do reaches the real project.
+- Have you ever wished someone could walk you through your first contribution, one step at a time?
+
+- Are you a maintainer who wants to make newcomers feel welcome but struggles to find the time to guide everyone?
+
+- Do you find yourself answering the same questions, reviewing contributions and trying to keep your community healthy, all at once?
+
+- Would you like a safe space to practise open-source collaboration before jumping into a real project?
+
+If you answered yes to any of these, IOSS might be just what you're looking for.
+
+Open source is about more than code. It's about people learning from one another, sharing ideas, solving problems together and building things that others can use and improve.
+
+But finding your place in an open-source community isn't always straightforward. Sometimes, you need more than documentation. You need someone to show you around, help you understand the project, let you practise and give you the confidence to take the next step.
+
+That's why we're building IOSS.
 
 ## How it works
 
-::: {.grid}
+IOSS is an interactive learning and exploration platform designed to help people understand, navigate and participate in open-source communities.
 
-::: {.g-col-12 .g-col-md-4}
-### 1. The repository
+We believe that contributing to open source should be about more than knowing how to use Git or submit a pull request. It is also about understanding the people, practices and shared responsibilities that make open-source projects work.
 
-A guided tour shows you the files of the project: the README, the license, the contribution guidelines. Then you set up the environment and explore the code.
-:::
+Our motivation comes from a simple observation: people are often encouraged to contribute to open source, but are not always shown how to find their way into a project or become comfortable participating in its community.
 
-::: {.g-col-12 .g-col-md-4}
-### 2. The community
+Documentation is important, but sometimes you need more than a list of instructions. You need to see how a project fits together, practise what you've learned, ask questions, make mistakes and understand what to do next.
 
-A local Git forge runs the workflow: issue, branch, pull request, review, revision, merge. Other people play the maintainer and the reviewer. When nobody is available, a bot or an LLM plays the role.
-:::
+That's the experience we want to create.
 
-::: {.g-col-12 .g-col-md-4}
-### 3. The reflection
+## What are we trying to achieve?
 
-A shared learning notebook links each step to a learning goal. After each milestone, it asks you a question. Peers and mentors comment on your answers.
-:::
+IOSS brings together project exploration, guided learning and practical activities to help people build confidence and develop the skills to participate meaningfully in open source.
 
-:::
+Our goals are to:
 
-## Human to human first
+- Make projects easier to understand. Help newcomers explore repositories, discover important files, understand project structures and learn how different parts fit together.
+- Make the first contribution less intimidating. Provide guidance through the steps involved in finding an issue, communicating with maintainers, making changes and submitting contributions.
+- Support the people who maintain projects. Help aspiring and existing maintainers develop skills in issue management, code review, constructive feedback and community support.
+- Make learning practical. Give people opportunities to practise real open-source activities rather than simply read about them.
+- Keep the human side of open source at the centre. Encourage thoughtful communication, collaboration, transparency, fairness and respect.
 
-The LLM is a stand-in and a helper. It is never the main way that people talk to each other. Peers fill the roles first. Only humans give the feedback that counts.
+We are interested in how AI can support this experience, but not in replacing the people who make open source what it is. Technology should help us learn to work better together, not take away the opportunity to do so.
 
-## Status
+## How to use IOSS
 
-IOSS is a hackathon prototype. It has one practice repository, [tinystats](https://github.com/florence-bockting/tinystats), and one scenario: [your first contribution](https://github.com/florence-bockting/IOSS/blob/main/scenarios/first-contribution.md).
+Think of IOSS as a guide you can explore at your own pace. You don't need to know everything about open source before you begin. That's what the journey is for.
 
-To help build IOSS, read the page [Developers](developers.qmd).
+1. Start with a project
 
-The prototype has:
+Choose an open-source repository you want to understand or contribute to.
 
-- A local [Forgejo](https://forgejo.org/) sandbox with CI
-- A guided tour of the repository
-- A quest issue that gives you the tasks and ticks them when you finish them
+Rather than being dropped into a collection of unfamiliar files, you'll be guided through the project and introduced to its structure, purpose, documentation and contribution guidelines.
+
+The aim is to help you answer a simple question: What is this project about, and how do people work on it?
+
+2. Explore the project
+
+Get to know the repository through an interactive visual tour.
+
+Discover where the source code lives, where tests are written, how documentation is organised and how the different parts of the project relate to one another.
+
+Take your time. Explore, ask questions and build an understanding of the project before deciding what you want to do next.
+
+3. Choose your learning path
+
+People come to open source with different interests and levels of experience. IOSS recognises that.
+
+### The Contributor Path
+
+For people who want to make their first contribution or become more confident contributors.
+
+You can explore activities such as:
+
+- Finding and understanding open issues.
+- Communicating with maintainers and other contributors.
+- Learning Git workflows.
+- Setting up a development environment.
+- Making changes and running tests.
+- Creating and submitting pull requests.
+- Responding to feedback and participating in code reviews.
+
+### The Maintainer Path
+
+For people who want to understand what it takes to care for and sustain an open-source project.
+
+Activities may include:
+
+- Understanding maintainer responsibilities.
+- Triaging and managing issues.
+- Reviewing pull requests.
+- Writing constructive feedback.
+- Supporting and mentoring newcomers.
+- Handling disagreements and difficult interactions.
+- Improving project documentation and processes.
+- Building welcoming and sustainable communities.
+
+4. Learn by doing
+
+Reading about a process is one thing. Trying it yourself is another.
+
+IOSS explores interactive activities and scenarios that allow you to practise open-source tasks, make decisions and learn from the outcomes.
+
+Depending on the activity, you may practise independently with AI-supported guidance or collaborate with other learners.
+
+You can work towards objectives, receive feedback, track your progress and recognise the skills you've developed.
+
+The point isn't to get everything right the first time. It's to create a space where you can learn, experiment and become more confident before taking those skills into a real community.
+
+
+5. Reflect and keep growing
+
+Open-source participation is a journey, not a checklist.
+
+As you complete activities, you'll have opportunities to reflect on what you've learned, identify areas for improvement and explore your next steps.
+
+Whether you're preparing to make your first contribution or becoming a more effective maintainer, there's always something new to learn.
+
+## Where do we want to go?
+
+We see IOSS growing into a welcoming learning environment where understanding a project is only the beginning.
+
+There is much more we'd like to explore.
+
+### A richer visual exploration experience
+
+We want to make repository exploration more intuitive and useful, helping people understand not just where files are located, but how the different parts of a project work together.
+
+We also want to make the experience adaptable to different kinds of repositories and open-source projects.
+
+### More opportunities to learn together
+
+We envision activities that go beyond individual exercises.
+
+Imagine practising a contribution workflow with other learners, taking on different roles in a simulated open-source project, or working together to resolve an issue. Learning can become a shared experience rather than something people have to figure out alone.
+
+### More realistic open-source scenarios
+
+Open-source communities are full of situations that don't always have straightforward answers.
+
+How do you respond when a contribution needs significant changes? How do you handle a disagreement? How do you welcome someone who is completely new?
+
+We want to create opportunities to explore these situations, practise making decisions and understand the human considerations behind them.
+
+### Thoughtful AI assistance
+
+AI has the potential to make learning more accessible by explaining unfamiliar concepts, providing feedback and helping people practise different interactions.
+
+We want to explore these possibilities carefully.
+
+Our priority is to encourage understanding, critical thinking and genuine participation, rather than generate contributions that people cannot explain or maintain.
+
+### A pathway from learning to belonging
+
+Ultimately, we want IOSS to help people move beyond completing exercises.
+
+We want them to become confident enough to participate in real projects, build relationships with other contributors, take on responsibilities and eventually help sustain the communities they join.
 
 [Get started](get-started.qmd){.btn .btn-primary}
