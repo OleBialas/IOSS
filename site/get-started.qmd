@@ -1,80 +1,271 @@
+
 ---
+
 title: "Get started"
+
 ---
+
+  
 
 The sandbox is a local [Forgejo](https://forgejo.org/) instance on your computer. It has the practice repository, the actors of the community and the CI. Nothing reaches GitHub.
 
+  
+
 ## Requirements
 
-- Docker with `docker compose`
+  
+
+- Docker with `docker compose` (see [Install Docker](#install-docker) if you do not have it)
+
 - Python 3.11 or later
+
 - Git
 
+  
+
 ::: {.callout-warning}
+
 The CI of the sandbox runs Docker in a privileged container. Do not start the sandbox on a computer where this is not allowed.
+
 :::
+
+  
+
+## Install Docker
+
+  
+
+Docker runs the sandbox in isolated containers, so you do not install Forgejo yourself. If `docker compose version` already prints a version number in your terminal, skip this section.
+
+  
+
+### macOS
+
+  
+
+1. Download [Docker Desktop](https://www.docker.com/products/docker-desktop/). Choose **Apple Silicon** for M1/M2/M3/M4 Macs and **Intel** for older Macs. To check your Mac, open the Apple menu and choose **About This Mac**.
+
+2. Open the downloaded `.dmg` file and drag Docker to the **Applications** folder.
+
+3. Open **Docker** from the Applications folder and accept the terms.
+
+4. Wait until the whale icon in the menu bar stops moving. Docker is then running.
+
+  
+
+### Windows
+
+  
+
+1. Download [Docker Desktop](https://www.docker.com/products/docker-desktop/) and run the installer.
+
+2. Keep the option **Use WSL 2 instead of Hyper-V** selected. The installer sets up WSL 2 for you.
+
+3. Restart the computer when the installer asks.
+
+4. Open **Docker Desktop** from the Start menu and accept the terms.
+
+5. Wait until Docker Desktop shows **Engine running** at the bottom left.
+
+6. Run the commands of this page in **PowerShell** or in a WSL terminal.
+
+  
+
+::: {.callout-note}
+
+Docker Desktop needs Windows 10 (64-bit) or Windows 11 with virtualization turned on in the BIOS. Most computers have it on by default.
+
+:::
+
+  
+
+### Linux
+
+  
+
+Install Docker Engine with the official script:
+
+  
+
+```bash
+
+curl  -fsSL  https://get.docker.com  -o  get-docker.sh
+
+sudo  sh  get-docker.sh
+
+```
+
+  
+
+Then allow your user to run Docker without `sudo`:
+
+  
+
+```bash
+
+sudo  usermod  -aG  docker  $USER
+
+```
+
+  
+
+Log out and log in again for this to take effect. The script installs the `docker compose` plugin too.
+
+  
+
+For other ways to install Docker on Linux, see the [official Docker installation guide](https://docs.docker.com/engine/install/).
+
+  
+
+### Check the installation
+
+  
+
+Open a new terminal and run:
+
+  
+
+```bash
+
+docker  --version
+
+docker  compose  version
+
+docker  run  hello-world
+
+```
+
+  
+
+The first two commands print a version number. The last command prints `Hello from Docker!`. If you see all three, Docker works.
+
+  
+
 
 ## Start the sandbox
 
+  
+
 Clone IOSS:
 
+  
+
 ```bash
-git clone https://github.com/florence-bockting/IOSS.git
+
+git  clone  https://github.com/florence-bockting/IOSS.git
+
 ```
+
+  
 
 Go to the sandbox folder:
 
+  
+
 ```bash
-cd IOSS/sandbox
+
+cd  IOSS/sandbox
+
 ```
+
+  
 
 Start Forgejo:
 
+  
+
 ```bash
-docker compose up -d
+
+docker  compose  up  -d
+
 ```
+
+  
 
 Create the users, the repository and the issues:
 
+  
+
 ```bash
-python3 setup.py
+
+python3  setup.py
+
 ```
+
+  
 
 The first CI job takes about 5 minutes, because Docker downloads the images. Later jobs take less than 1 minute.
 
+  
+
 ## Log in
 
+  
+
 1. Open <http://localhost:3000/tinystats/tinystats>.
+
 2. Log in as `newcomer`. The password is in the file `.env`:
 
-   ```bash
-   grep NEWCOMER_PASSWORD .env
-   ```
+  
+
+```bash
+
+grep NEWCOMER_PASSWORD .env
+
+```
+
+  
 
 ## Play
 
-- **The tour** starts on your first visit to the repository. The **Start tour** button at the bottom right starts it again.
-- **The quest issue** is pinned in the issue list. It shows your tasks as a checklist. When you finish a task, the bot ticks the box and names the next task.
-- **The actors** answer you. For example, the maintainer assigns an issue to you when you write that you want to work on it.
+  
+
+-  **The tour** starts on your first visit to the repository. The **Start tour** button at the bottom right starts it again.
+
+-  **The quest issue** is pinned in the issue list. It shows your tasks as a checklist. When you finish a task, the bot ticks the box and names the next task.
+
+-  **The actors** answer you. For example, the maintainer assigns an issue to you when you write that you want to work on it.
+
+  
 
 The steps of the game are on the page [Scenarios](scenarios.qmd).
 
+  
+
 ## Start again
 
+  
+
 ::: {.callout-warning}
+
 This deletes all users, issues and pull requests of the sandbox.
+
 :::
 
-```bash
-docker compose down -v
-```
+  
 
 ```bash
-rm .env
+
+docker  compose  down  -v
+
 ```
+
+  
+
+```bash
+
+rm  .env
+
+```
+
+  
 
 Then start the sandbox again.
 
+  
+
 ## More information
+
+  
 
 The [sandbox README](https://github.com/florence-bockting/IOSS/blob/main/sandbox/README.md) explains the CI, the tour and the quest in detail.
