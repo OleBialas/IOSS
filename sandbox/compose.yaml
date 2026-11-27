@@ -8,6 +8,9 @@ services:
       - FORGEJO__service__DISABLE_REGISTRATION=true
       - FORGEJO__server__ROOT_URL=http://localhost:3000/
       - FORGEJO__server__DISABLE_SSH=true
+      - FORGEJO__actions__ENABLED=true
+      # data.forgejo.org does not mirror astral-sh/setup-uv.
+      - FORGEJO__actions__DEFAULT_ACTIONS_URL=https://github.com
     volumes:
       - forgejo-data:/data
     ports:
@@ -15,5 +18,33 @@ services:
       - "127.0.0.1:3000:3000"
     restart: unless-stopped
 
+  # The Docker daemon for CI jobs. It shares the network of forgejo, so a job
+  # reaches Forgejo at localhost:3000, the same as ROOT_URL.
+  dind:
+    image: docker:29-dind
+    privileged: true
+    network_mode: service:forgejo
+    command: ["dockerd", "-H", "tcp://0.0.0.0:2375", "--tls=false"]
+    depends_on:
+      - forgejo
+    restart: unless-stopped
+
+  runner:
+    image: data.forgejo.org/forgejo/runner:13
+    environment:
+      - DOCKER_HOST=tcp://forgejo:2375
+    volumes:
+      - runner-data:/data
+    # setup.py writes the config after it registers the runner.
+    command:
+      - sh
+      - -c
+      - while [ ! -f /data/config.yml ]; do sleep 2; done;
+        exec forgejo-runner daemon --config /data/config.yml
+    depends_on:
+      - dind
+    restart: unless-stopped
+
 volumes:
   forgejo-data:
+  runner-data:

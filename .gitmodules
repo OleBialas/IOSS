@@ -1,0 +1,3 @@
+[submodule "projects/tinystats"]
+	path = projects/tinystats
+	url = https://github.com/florence-bockting/tinystats
