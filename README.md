@@ -1,3 +1,6 @@
+> [!WARNING]
+> IOSS is in development. Expect breaking changes, missing features and incomplete documentation.
+
 # IOSS: Interactive Open Source Simulator
 
 > Learn to contribute to research software by playing through real workflows, in a safe sandbox, with humans first and LLMs as backup.
