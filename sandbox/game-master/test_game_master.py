@@ -33,6 +33,7 @@ class QuestTest(unittest.TestCase):
     def test_body_has_one_open_box_for_each_task(self):
         self.assertEqual(self.body.count("- [ ] "), len(self.quest["task"]))
         self.assertIn("@newcomer", self.body)
+        self.assertIn("(+1 XP)", self.body)
 
     def test_tick_ticks_only_its_task(self):
         body = quest.tick(self.body, "comment-on-issue")
@@ -67,13 +68,40 @@ class QuestTest(unittest.TestCase):
         text = quest.progress(self.quest, task, body)
         self.assertIn("Next task: " + self.quest["task"][1]["text"], text)
 
-    def test_progress_finishes_when_no_active_task_is_left(self):
+    def test_progress_awards_points_and_badge_after_goal_tasks(self):
         body = self.body
-        for task in self.quest["task"]:
-            if "trigger" in task:
-                body = quest.tick(body, task["id"])
-        text = quest.progress(self.quest, self.quest["task"][0], body)
+        contributor_tasks = [
+            task for task in self.quest["task"] if task["badge"] == "Contributor"
+        ]
+        for task in contributor_tasks:
+            body = quest.tick(body, task["id"])
+        text = quest.progress(self.quest, contributor_tasks[-1], body)
+        self.assertIn("Quest XP: 6 points", text)
+        self.assertIn("Badges: Contributor", text)
+        self.assertNotIn("Responder", text)
+
+    def test_progress_awards_points_even_when_review_needs_revision(self):
+        body = self.body
+        responder_tasks = [
+            task for task in self.quest["task"] if task["badge"] == "Responder"
+        ]
+        for task in responder_tasks[:2]:
+            body = quest.tick(body, task["id"])
+        text = quest.progress(self.quest, responder_tasks[1], body)
+        self.assertIn("Quest XP: 4 points", text)
+        self.assertIn("Badges: none yet", text)
+        self.assertNotIn(self.quest["finish"], text)
+
+    def test_progress_finishes_only_when_all_tasks_are_done(self):
+        body = self.body
+        for task in self.quest["task"][:-1]:
+            body = quest.tick(body, task["id"])
+        text = quest.progress(self.quest, self.quest["task"][-2], body)
+        self.assertNotIn(self.quest["finish"], text)
+        body = quest.tick(body, self.quest["task"][-1]["id"])
+        text = quest.progress(self.quest, self.quest["task"][-1], body)
         self.assertIn(self.quest["finish"], text)
+        self.assertIn("Badges: Contributor, Responder", text)
 
 
 class ServerTest(unittest.TestCase):
@@ -84,6 +112,8 @@ class ServerTest(unittest.TestCase):
     def fake_api(self, token, method, path, body=None, sudo=None):
         """Store the requests. Answer a GET of the quest issue with self.body."""
         self.calls.append((method, path, sudo))
+        if method == "POST":
+            self.post_bodies.append((path, body))
         if method == "GET":
             return {"body": self.body}
         if method == "PATCH" and path.endswith(f"/{QUEST_ISSUE}"):
@@ -92,6 +122,7 @@ class ServerTest(unittest.TestCase):
 
     def run_event(self, event, payload):
         self.calls = []
+        self.post_bodies = []
         with mock.patch.object(server, "api", self.fake_api):
             return server.handle(event, payload, self.settings)
 
@@ -116,6 +147,13 @@ class ServerTest(unittest.TestCase):
             ],
         )
         self.assertTrue(quest.is_done(self.body, "comment-on-issue"))
+        quest_comment = next(
+            body["body"]
+            for path, body in self.post_bodies
+            if path.endswith(f"/{QUEST_ISSUE}/comments")
+        )
+        self.assertIn("Quest XP: 1 point", quest_comment)
+        self.assertIn("Badges: none yet", quest_comment)
 
     def test_repeated_event_does_nothing(self):
         self.run_event("issue_comment", comment_event())

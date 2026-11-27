@@ -25,7 +25,10 @@ def marker(task_id):
 def render_body(quest):
     """Return the body of the quest issue: the intro and the checklist."""
     lines = [quest["intro"].format(player=quest["player"]).strip(), ""]
-    lines += [f"- [ ] {task['text']} {marker(task['id'])}" for task in quest["task"]]
+    lines += [
+        f"- [ ] {task['text']} (+{task['points']} XP) {marker(task['id'])}"
+        for task in quest["task"]
+    ]
     return "\n".join(lines) + "\n"
 
 
@@ -45,10 +48,30 @@ def progress(quest, task, body):
     """Return the quest-bot comment after a task is done."""
     done = f"Task done: {task['text']}"
     following = [t for t in quest["task"] if not is_done(body, t["id"])]
-    active = [t for t in following if "trigger" in t]
-    if not active:
-        return f"{done}\n\n{quest['finish']}"
-    lines = [done, "", f"Next task: {following[0]['text']}"]
+    points = sum(
+        t["points"] for t in quest["task"] if is_done(body, t["id"])
+    )
+    badges = sorted(
+        {
+            t["badge"]
+            for t in quest["task"]
+            if all(
+                is_done(body, member["id"])
+                for member in quest["task"]
+                if member["badge"] == t["badge"]
+            )
+        }
+    )
+    lines = [
+        done,
+        "",
+        f"Quest XP: {points} {'point' if points == 1 else 'points'}",
+        f"Badges: {', '.join(badges) if badges else 'none yet'}",
+    ]
+    if not following:
+        lines += ["", quest["finish"]]
+        return "\n".join(lines)
+    lines += ["", f"Next task: {following[0]['text']}"]
     if following[0].get("hint"):
         lines += ["", following[0]["hint"]]
     return "\n".join(lines)
