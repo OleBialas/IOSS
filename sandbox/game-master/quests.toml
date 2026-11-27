@@ -1,0 +1,67 @@
+# The quest of the first-contribution scenario.
+#
+# setup.py writes the title, the intro and the checklist to the quest issue.
+# The game master reads this file again for each event, so a change applies
+# without a restart. A task without a trigger shows in the checklist, but no
+# event ticks it.
+#
+# Task fields:
+#   id       Marks the checklist line. Do not change it after setup.
+#   text     The checklist line.
+#   hint     quest-bot posts it when the task is the next one.
+#   trigger  The webhook event and its action. server.py knows which issue
+#            or pull request each event is about.
+#   reply    The in-world reply on that issue or pull request. {player}
+#            becomes the player's name.
+#   reply_as The actor who replies. The default is maintainer.
+#   assign   true: the actor also assigns the issue to the player.
+
+player = "newcomer"
+title = "Quest: your first contribution"
+intro = """
+Welcome, @{player}! This issue follows your first contribution to tinystats.
+
+Do the tasks in this list. I tick each box when you finish the task. Then I tell you the next task.
+
+I am a bot. The other actors in this repository play the roles of the project.
+"""
+finish = "You finished all active tasks of the quest. Well done!"
+
+[[task]]
+id = "comment-on-issue"
+text = "Choose an open issue. Write a comment that you want to work on it."
+hint = "Read the open issues. Choose one that you understand. Then write a comment on it."
+trigger = { event = "issue_comment", action = "created" }
+reply = """
+Thanks, @{player}! I assigned the issue to you.
+
+Please read `CONTRIBUTING.md` before you start. Ask here if something is not clear.
+"""
+assign = true
+
+[[task]]
+id = "make-change"
+text = "Create a branch. Fix the issue. Run the tests and the linter locally."
+
+[[task]]
+id = "open-pull-request"
+text = "Push the branch. Open a pull request with `Closes #<number>` in the description."
+hint = "Push your branch. Then open a pull request. Write `Closes #<number>` in the description."
+trigger = { event = "pull_request", action = "opened" }
+reply = """
+Thanks for the pull request, @{player}! A reviewer looks at it soon.
+
+Check the CI result in the meantime.
+"""
+
+[[task]]
+id = "answer-review"
+text = "Read each review comment. Answer each comment."
+
+[[task]]
+id = "revise"
+text = "Push one commit for each requested change."
+
+[[task]]
+id = "merge-and-reflect"
+text = "Write your final reflection after the merge."

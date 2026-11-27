@@ -1,7 +1,8 @@
 """Populate a fresh Forgejo sandbox for the first-contribution scenario.
 
 The script creates the actors, the tinystats organisation and repository, the
-seeded code and the issues. It uses only the Python standard library.
+seeded code, the issues and the quest issue. It uses only the Python standard
+library.
 
 Usage:
     docker compose up -d
@@ -20,6 +21,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "game-master"))
+import quest  # noqa: E402
+
 URL = "http://localhost:3000"
 ORG = "tinystats"
 REPO = "tinystats"
@@ -37,7 +41,10 @@ ACTORS = {
     "newcomer": "write",
     "fellow": None,
     "ci-bot": "write",
+    # The voice of the game. It opens and edits the quest issue.
+    "quest-bot": None,
 }
+GAME_MASTER_URL = "http://game-master:8000/hook"
 RUNNER_CONFIG = """\
 log:
   level: info
@@ -263,13 +270,60 @@ def populate(source):
         )
         print(f"Created issue #{issue['number']}: {meta['title']}")
 
-    lines = [f"FORGEJO_URL={URL}", f"ADMIN_TOKEN={token}"]
+    webhook_secret = secrets.token_hex(20)
+    quest_issue = create_quest(token, webhook_secret)
+
+    lines = [
+        f"FORGEJO_URL={URL}",
+        f"ADMIN_TOKEN={token}",
+        f"WEBHOOK_SECRET={webhook_secret}",
+        f"QUEST_ISSUE={quest_issue}",
+    ]
     lines += [
         f"{n.upper().replace('-', '_')}_PASSWORD={p}" for n, p in passwords.items()
     ]
     ENV_FILE.write_text("\n".join(lines) + "\n")
     ENV_FILE.chmod(0o600)
     print(f"Wrote the test passwords to {ENV_FILE}")
+
+    # Recreate the game master, so it reads the new .env.
+    subprocess.run(["docker", "compose", "up", "-d", "game-master"], cwd=HERE, check=True)
+    print("Started the game master")
+
+
+def create_quest(token, webhook_secret):
+    """Create the webhook to the game master and the quest issue."""
+    api("POST", f"/orgs/{ORG}/hooks", token, {
+        "type": "forgejo",
+        "active": True,
+        "events": ["issue_comment", "pull_request"],
+        "config": {
+            "url": GAME_MASTER_URL,
+            "content_type": "json",
+            "secret": webhook_secret,
+        },
+    })  # fmt: skip
+
+    q = quest.load()
+    issues = f"/repos/{ORG}/{REPO}/issues"
+    issue = api(
+        "POST",
+        issues,
+        token,
+        {"title": q["title"], "body": quest.render_body(q)},
+        sudo="quest-bot",
+    )
+    number = issue["number"]
+    api(
+        "PATCH",
+        f"{issues}/{number}",
+        token,
+        {"assignees": [q["player"]]},
+        sudo="maintainer",
+    )
+    api("POST", f"{issues}/{number}/pin", token, sudo="maintainer")
+    print(f"Created the quest issue #{number}")
+    return number
 
 
 if __name__ == "__main__":
