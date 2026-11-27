@@ -1,0 +1,30 @@
+diff --git a/src/tinystats/core.py b/src/tinystats/core.py
+index 8709028..da253e2 100644
+--- a/src/tinystats/core.py
++++ b/src/tinystats/core.py
+@@ -58,8 +58,6 @@ def sd(x: Sequence[float]) -> float:
+     2.138089935299395
+     """
+     n = len(x)
+-    if n < 2:
+-        raise ValueError("x must contain at least two values.")
+     m = mean(x)
+     return math.sqrt(math.fsum((xi - m) ** 2 for xi in x) / (n - 1))
+ 
+diff --git a/tests/test_core.py b/tests/test_core.py
+index 7db00f1..5ce32f0 100644
+--- a/tests/test_core.py
++++ b/tests/test_core.py
+@@ -33,12 +33,6 @@ def test_sd(x, expected):
+     assert sd(x) == pytest.approx(expected)
+ 
+ 
+-@pytest.mark.parametrize("x", [[], [1]])
+-def test_sd_too_few_values_raises(x):
+-    with pytest.raises(ValueError, match="at least two values"):
+-        sd(x)
+-
+-
+ @pytest.mark.parametrize(
+     ("x", "window", "expected"),
+     [

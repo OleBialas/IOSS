@@ -1,0 +1,18 @@
+diff --git a/README.md b/README.md
+index 8b0468c..c898c55 100644
+--- a/README.md
++++ b/README.md
+@@ -13,11 +13,11 @@ pip install git+https://github.com/florence-bockting/tinystats
+ ## Usage
+ 
+ ```python
+-from tinystats import mean, moving_average, sd
++from tinystats import mean, moving_avarage, sd
+ 
+ mean([1, 2, 3, 4])  # 2.5
+ sd([2, 4, 4, 4, 5, 5, 7, 9])  # 2.138...
+-moving_average([1, 2, 3, 4, 5], 3)  # [2.0, 3.0, 4.0]
++moving_avarage([1, 2, 3, 4, 5], 3)  # [2.0, 3.0, 4.0]
+ ```
+ 
+ ## Project structure
