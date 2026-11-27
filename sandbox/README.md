@@ -59,6 +59,29 @@ Each push and each pull request runs `.github/workflows/ci.yml` of tinystats. Op
 
 The first job takes about 5 minutes, because `dind` downloads the images. Later jobs take less than 1 minute. CI needs internet access to download `uv`, Python and the actions.
 
+## Repository tour
+
+A guided tour shows the newcomer the files of the repository: README, LICENSE, CONTRIBUTING and the others. It uses [Driver.js](https://driverjs.com) 1.14.0 (MIT).
+
+- The tour starts by itself on the first visit to the home page of a repository. The browser remembers this in `localStorage`.
+- The **Start tour** button at the bottom right starts it again.
+- The tour skips a step when the page has no matching element.
+
+| File | Content |
+| :-- | :-- |
+| [`tour/assets/steps.js`](tour/assets/steps.js) | The text of each step. Edit the tour here. |
+| [`tour/assets/tour.js`](tour/assets/tour.js) | Starts the tour and adds the button. |
+| [`tour/footer.tmpl`](tour/footer.tmpl) | Loads the scripts on each Forgejo page. |
+| [`tour/assets/vendor/`](tour/assets/vendor/) | Driver.js and its license. No CDN is needed. |
+
+`compose.yaml` mounts these files into the Forgejo custom folder `/data/gitea`. After a change in `steps.js`, reload the page. After a change in `footer.tmpl`, restart Forgejo:
+
+```bash
+docker compose restart forgejo
+```
+
+**Warning:** Forgejo does not support template overrides. A Forgejo upgrade can break `footer.tmpl` or the CSS selectors in `steps.js`. Test the tour after each upgrade.
+
 ## Reset
 
 **Warning:** this deletes all users, issues and pull requests of the sandbox.

@@ -13,6 +13,9 @@ services:
       - FORGEJO__actions__DEFAULT_ACTIONS_URL=https://github.com
     volumes:
       - forgejo-data:/data
+      # The repository tour. /data/gitea is the custom folder of Forgejo.
+      - ./tour/footer.tmpl:/data/gitea/templates/custom/footer.tmpl:ro
+      - ./tour/assets:/data/gitea/public/assets/tour:ro
     ports:
       # Only this machine can reach the sandbox.
       - "127.0.0.1:3000:3000"
