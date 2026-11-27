@@ -8,6 +8,8 @@
 # Task fields:
 #   id       Marks the checklist line. Do not change it after setup.
 #   text     The checklist line.
+#   points   Fixed XP awarded when the task is ticked.
+#   badge    Badge earned after every task with this badge is ticked.
 #   hint     quest-bot posts it when the task is the next one.
 #   trigger  The webhook event and its action. server.py knows which issue
 #            or pull request each event is about.
@@ -25,11 +27,45 @@ Do the tasks in this list. I tick each box when you finish the task. Then I tell
 
 I am a bot. The other actors in this repository play the roles of the project.
 """
-finish = "You finished all active tasks of the quest. Well done!"
+finish = "You finished all tasks of the quest. Well done!"
+
+# Separate role quest for maintainer activities.
+[maintainer]
+title = "Quest: maintainer"
+player = "maintainer"
+finish = "You finished all maintainer tasks. Well done!"
+
+[[maintainer.task]]
+id = "reviewing"
+text = "Reviewing"
+points = 3
+badge = "Maintainer"
+
+[[maintainer.task]]
+id = "commenting-on-issue"
+text = "Commenting on an Issue"
+points = 1
+badge = "Maintainer"
+
+[[maintainer.task]]
+id = "issue-triage"
+text = "Issue triage"
+points = 2
+badge = "Maintainer"
+labels = [
+    "bugs",
+    "feature",
+    "documentation",
+    "good first issue",
+    "refactoring",
+    "needs discussion",
+]
 
 [[task]]
 id = "comment-on-issue"
 text = "Choose an open issue. Write a comment that you want to work on it."
+points = 1
+badge = "Contributor"
 hint = "Read the open issues. Choose one that you understand. Then write a comment on it."
 trigger = { event = "issue_comment", action = "created" }
 reply = """
@@ -42,10 +78,14 @@ assign = true
 [[task]]
 id = "make-change"
 text = "Create a branch. Fix the issue. Run the tests and the linter locally."
+points = 3
+badge = "Contributor"
 
 [[task]]
 id = "open-pull-request"
 text = "Push the branch. Open a pull request with `Closes #<number>` in the description."
+points = 2
+badge = "Contributor"
 hint = "Push your branch. Then open a pull request. Write `Closes #<number>` in the description."
 trigger = { event = "pull_request", action = "opened" }
 reply = """
@@ -57,11 +97,17 @@ Check the CI result in the meantime.
 [[task]]
 id = "answer-review"
 text = "Read each review comment. Answer each comment."
+points = 2
+badge = "Contributor"
 
 [[task]]
 id = "revise"
 text = "Push one commit for each requested change."
+points = 2
+badge = "Contributor"
 
 [[task]]
 id = "merge-and-reflect"
 text = "Write your final reflection after the merge."
+points = 1
+badge = "Contributor"

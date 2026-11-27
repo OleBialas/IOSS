@@ -93,7 +93,9 @@ A pinned quest issue gives the newcomer the tasks of the scenario as a checklist
 4. An actor replies in the game world. For example, `maintainer` thanks the newcomer and assigns the issue.
 5. `quest-bot` ticks the box in the quest issue. Then it names the next task.
 
-The game master ignores events from all users except the player. A ticked box stops a second reply for the same task.
+The game master ignores events from all users except the player. A ticked box stops a second reply for the same task. Each task shows its fixed XP reward; progress comments include the running total and any badges earned after every task assigned to that badge is checked. 
+The current checklist awards Contributor and maintainer badges. 
+Setup and project-exploration tasks are not included.
 
 | File | Content |
 | :-- | :-- |
@@ -140,4 +142,3 @@ Then start again.
 
 - Scripted and LLM actors that review. The game master replies with fixed text only.
 - Tasks for the review, the revision and the merge (Steps 5–7)
-- Points and badges
