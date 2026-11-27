@@ -57,7 +57,7 @@ The first CI job takes about 5 minutes, because Docker downloads the images. Lat
 - **The quest issue** is pinned in the issue list. It shows your tasks as a checklist. When you finish a task, the bot ticks the box and names the next task.
 - **The actors** answer you. For example, the maintainer assigns an issue to you when you write that you want to work on it.
 
-The steps of the game are on the page [Scenarios](scenarios.qmd).
+The steps of the game are in the [scenario file](https://github.com/florence-bockting/IOSS/blob/main/scenarios/first-contribution.md).
 
 ## Start again
 

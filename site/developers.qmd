@@ -1,0 +1,184 @@
+---
+title: "Developers"
+subtitle: "Get the code, make a change and open a pull request."
+---
+
+This page is for you if you want to improve IOSS itself: the sandbox, the game, the scenarios or this website. To play IOSS, read [Get started](get-started.qmd).
+
+## Ways to contribute
+
+You do not have to write code to help.
+
+- **Report a problem or an idea.** Open an [issue](https://github.com/florence-bockting/IOSS/issues). Write what you did, what you expected and what happened.
+- **Improve a text.** Tour steps, quest tasks, scenario steps and this website are all plain text files.
+- **Add a task or a scenario.** Most tasks need only a change in one configuration file.
+- **Improve the sandbox.** The setup script and the game master are small Python programs. They use only the standard library.
+
+For a large change, open an issue first. Then we can agree on the design before you write the code.
+
+## Get the code
+
+The practice repository [tinystats](https://github.com/florence-bockting/tinystats) is a Git submodule in `projects/tinystats`. Clone IOSS with its submodule:
+
+```bash
+git clone --recurse-submodules https://github.com/florence-bockting/IOSS.git
+```
+
+If you already cloned IOSS without the submodule, run this command in the clone:
+
+```bash
+git submodule update --init
+```
+
+::: {.callout-note}
+## No write access?
+Fork the repository on GitHub first. Clone your fork. Then add the original repository as `upstream`, so you can get the latest changes:
+
+```bash
+git remote add upstream https://github.com/florence-bockting/IOSS.git
+```
+:::
+
+## Requirements
+
+| Tool | For |
+| :-- | :-- |
+| Git | All changes |
+| Python 3.11 or later | The sandbox setup and the game master |
+| Docker with `docker compose` | The sandbox |
+| [Quarto](https://quarto.org/) | This website |
+
+## Project structure
+
+| Folder | Content |
+| :-- | :-- |
+| `scenarios/` | The scenarios. Each file describes the steps, the roles and the learning goals of one scenario. |
+| `seed/` | The planted bugs (`patches/`) and the issue texts (`issues/`) for the practice repository. |
+| `projects/tinystats/` | The practice repository, as a Git submodule. |
+| `sandbox/` | The local Forgejo instance, its setup script and its CI. |
+| `sandbox/tour/` | The guided tour of the repository. |
+| `sandbox/game-master/` | The game master, which follows the quest of the player. |
+| `site/` | This website. |
+
+## Where to make a change
+
+| You want to change | Edit | Then |
+| :-- | :-- | :-- |
+| A tour step | `sandbox/tour/assets/steps.js` | Reload the page. |
+| A quest task or a reply of an actor | `sandbox/game-master/quests.toml` | Nothing. The game master reads the file for each event. |
+| A scenario | `scenarios/*.md` | Nothing. |
+| A planted bug or an issue text | `seed/patches/` and `seed/issues/` | Reset the sandbox. |
+| The setup of the sandbox | `sandbox/setup.py` or `sandbox/compose.yaml` | Reset the sandbox. |
+| This website | `site/*.qmd` | Preview the site. |
+
+::: {.callout-warning}
+The seed patches match the commit of tinystats that the submodule points to. If you update the submodule, apply the patches again to make sure that they still work.
+:::
+
+The [sandbox README](https://github.com/florence-bockting/IOSS/blob/main/sandbox/README.md) and the [seed README](https://github.com/florence-bockting/IOSS/blob/main/seed/README.md) explain each part in detail.
+
+## Make a change
+
+1. Update `main`:
+
+   ```bash
+   git switch main
+   ```
+
+   ```bash
+   git pull
+   ```
+
+2. Create a branch with a short name that says what you change:
+
+   ```bash
+   git switch -c feat/quest-review-task
+   ```
+
+3. Make the change. Keep it small: one topic in each branch.
+
+4. Test the change. See [Test your change](#test-your-change).
+
+5. Commit the change:
+
+   ```bash
+   git add sandbox/game-master/quests.toml
+   ```
+
+   ```bash
+   git commit -m "feat: add a quest task for the review"
+   ```
+
+6. Push the branch:
+
+   ```bash
+   git push -u origin feat/quest-review-task
+   ```
+
+7. Open a pull request on GitHub.
+
+### Commit messages
+
+Start each commit message with a type, as in [Conventional Commits](https://www.conventionalcommits.org/):
+
+| Type | For |
+| :-- | :-- |
+| `feat:` | A new function, task or page |
+| `fix:` | A bug fix |
+| `docs:` | A change to the documentation only |
+| `chore:` | Maintenance, for example a submodule update |
+
+## Test your change
+
+Run the unit tests of the game master:
+
+```bash
+cd sandbox/game-master && python3 -m unittest
+```
+
+Preview the website. Quarto updates the page each time you save a file:
+
+```bash
+quarto preview site
+```
+
+Test a change to the sandbox in a new sandbox. Run these commands in `sandbox/`.
+
+::: {.callout-warning}
+A reset deletes all users, issues and pull requests of the sandbox.
+:::
+
+```bash
+docker compose down -v
+```
+
+```bash
+rm .env
+```
+
+```bash
+docker compose up -d
+```
+
+```bash
+python3 setup.py
+```
+
+Then log in as `newcomer` and play the part that you changed.
+
+## Open a pull request
+
+- **Describe the change.** Write what you changed, why, and how you tested it.
+- **Link the issue.** Write `Closes #<number>` in the description. GitHub then closes the issue when the pull request merges.
+- **Open a draft** if the work is not finished. Mark it as ready when you want a review.
+- **Answer each review comment.** Push a new commit for each requested change.
+
+A maintainer merges the pull request after the review. A change to `site/` goes live on this website a few minutes after the merge.
+
+## License
+
+IOSS uses the [CC0 1.0 Universal](https://github.com/florence-bockting/IOSS/blob/main/LICENSE) license. When you contribute, you release your contribution under the same license.
+
+## Get help
+
+Open an [issue](https://github.com/florence-bockting/IOSS/issues) with your question. A question is a contribution too: it shows us where the documentation is not clear.

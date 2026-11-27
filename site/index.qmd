@@ -45,7 +45,9 @@ The LLM is a stand-in and a helper. It is never the main way that people talk to
 
 ## Status
 
-IOSS is a hackathon prototype. It has one practice repository, [tinystats](https://github.com/florence-bockting/tinystats), and one scenario: [your first contribution](scenarios.qmd).
+IOSS is a hackathon prototype. It has one practice repository, [tinystats](https://github.com/florence-bockting/tinystats), and one scenario: [your first contribution](https://github.com/florence-bockting/IOSS/blob/main/scenarios/first-contribution.md).
+
+To help build IOSS, read the page [Developers](developers.qmd).
 
 The prototype has:
 

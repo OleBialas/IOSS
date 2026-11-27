@@ -12,7 +12,7 @@ website:
       - href: index.qmd
         text: Home
       - get-started.qmd
-      - scenarios.qmd
+      - developers.qmd
     right:
       - icon: github
         href: https://github.com/florence-bockting/IOSS
