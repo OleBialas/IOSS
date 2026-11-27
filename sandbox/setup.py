@@ -38,6 +38,24 @@ ACTORS = {
     "fellow": None,
     "ci-bot": "write",
 }
+RUNNER_CONFIG = """\
+log:
+  level: info
+runner:
+  file: .runner
+  capacity: 1
+  labels:
+    - "ubuntu-latest:docker://node:24-bookworm"
+server:
+  connections:
+    forgejo:
+      url: http://forgejo:3000/
+      uuid: {uuid}
+      token: {secret}
+container:
+  # The network of the dind service, which is the network of forgejo.
+  network: host
+"""
 LABELS = {
     "bug": ("#d73a4a", "Something does not work"),
     "documentation": ("#0075ca", "Changes to the documentation"),
@@ -75,15 +93,47 @@ def wait_for_forgejo(timeout=60):
     sys.exit(f"Forgejo does not answer at {URL}. Run `docker compose up -d`.")
 
 
+def compose_exec(service, *args, user=None, stdin=None, check=True):
+    """Run a command in a compose service and return its output."""
+    cmd = ["docker", "compose", "exec", "-T"]
+    if user:
+        cmd += ["-u", user]
+    result = subprocess.run(
+        [*cmd, service, *args],
+        cwd=HERE,
+        input=stdin,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if check and result.returncode != 0:
+        sys.exit(f"{service}: {' '.join(args[:3])} failed:\n{result.stderr}")
+    return result
+
+
 def forgejo_cli(*args):
     """Run the forgejo CLI in the container as the git user."""
-    cmd = ["docker", "compose", "exec", "-T", "-u", "git", "forgejo", "forgejo"]
-    result = subprocess.run(
-        [*cmd, *args], cwd=HERE, capture_output=True, text=True, check=False
-    )
-    if result.returncode != 0:
-        sys.exit(f"forgejo {' '.join(args[:3])} failed:\n{result.stderr}")
-    return result.stdout.strip()
+    return compose_exec("forgejo", "forgejo", *args, user="git").stdout.strip()
+
+
+def register_runner():
+    """Register the CI runner and give it its config."""
+    if (
+        compose_exec("runner", "test", "-f", "/data/config.yml", check=False).returncode
+        == 0
+    ):
+        print("The runner is already registered")
+        return
+    secret = secrets.token_hex(20)
+    uuid = forgejo_cli(
+        "forgejo-cli", "actions", "register",
+        "--name", "ioss-runner",
+        "--scope", ORG,
+        "--secret", secret,
+    )  # fmt: skip
+    config = RUNNER_CONFIG.format(uuid=uuid, secret=secret)
+    compose_exec("runner", "sh", "-c", "cat > /data/config.yml", stdin=config)
+    print(f"Registered the runner for the organisation {ORG}")
 
 
 def read_issue(path):
@@ -128,7 +178,7 @@ def push_seeded_repo(source, token):
 
 
 def main():
-    """Create the actors, the repository and the issues."""
+    """Set up the repository and the CI runner."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
         "--source",
@@ -139,8 +189,14 @@ def main():
 
     wait_for_forgejo()
     if ENV_FILE.exists():
-        sys.exit(f"{ENV_FILE} exists. Reset with `docker compose down -v` first.")
+        print(f"{ENV_FILE} exists, so the repository is already set up")
+    else:
+        populate(args.source)
+    register_runner()
 
+
+def populate(source):
+    """Create the actors, the repository and the issues."""
     passwords = {name: secrets.token_urlsafe(12) for name in [ADMIN, *ACTORS]}
     forgejo_cli(
         "admin", "user", "create", "--admin",
@@ -177,7 +233,7 @@ def main():
             )
     print(f"Created repository: {URL}/{ORG}/{REPO}")
 
-    push_seeded_repo(args.source, token)
+    push_seeded_repo(source, token)
     print("Pushed the seeded code")
 
     label_ids = {}
