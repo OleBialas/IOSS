@@ -2,6 +2,8 @@
 
 A local [Forgejo](https://forgejo.org/) instance for the [first-contribution scenario](../scenarios/first-contribution.md). Nothing reaches GitHub.
 
+Learners do not need to run this setup themselves. An instructor can deploy the [cloud launcher](../cloud/), and learners start a sandbox from a web page. This page describes the local setup.
+
 ## Requirements
 
 - Docker with `docker compose`
@@ -46,6 +48,14 @@ git clone http://localhost:3000/tinystats/tinystats.git
 ```
 
 The port binds to `127.0.0.1`. Other machines cannot reach the sandbox.
+
+The cloud launcher sets these environment variables. Local use does not need them.
+
+| Variable | Default | Purpose |
+| :-- | :-- | :-- |
+| `FORGEJO_ROOT_URL` | `http://localhost:3000/` | Public URL of Forgejo |
+| `FORGEJO_BIND` | `127.0.0.1` | Address that publishes port 3000 |
+| `IOSS_<USER>_PASSWORD` | random | Password of a user, for example `IOSS_NEWCOMER_PASSWORD` |
 
 ## CI
 

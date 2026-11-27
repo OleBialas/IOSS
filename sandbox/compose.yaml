@@ -6,7 +6,8 @@ services:
       - USER_GID=1000
       - FORGEJO__security__INSTALL_LOCK=true
       - FORGEJO__service__DISABLE_REGISTRATION=true
-      - FORGEJO__server__ROOT_URL=http://localhost:3000/
+      # The cloud launcher sets the public URL of the instance.
+      - FORGEJO__server__ROOT_URL=${FORGEJO_ROOT_URL:-http://localhost:3000/}
       - FORGEJO__server__DISABLE_SSH=true
       - FORGEJO__actions__ENABLED=true
       # data.forgejo.org does not mirror astral-sh/setup-uv.
@@ -14,12 +15,15 @@ services:
     volumes:
       - forgejo-data:/data
     ports:
-      # Only this machine can reach the sandbox.
-      - "127.0.0.1:3000:3000"
+      # By default only this machine can reach the sandbox. The cloud
+      # launcher sets FORGEJO_BIND=0.0.0.0 to publish it.
+      - "${FORGEJO_BIND:-127.0.0.1}:3000:3000"
     restart: unless-stopped
 
   # The Docker daemon for CI jobs. It shares the network of forgejo, so a job
-  # reaches Forgejo at localhost:3000, the same as ROOT_URL.
+  # reaches Forgejo at localhost:3000, the same as ROOT_URL. In the cloud,
+  # ROOT_URL uses the public DNS name of the instance. Inside the VPC that name
+  # resolves to the private IP, where port 3000 is published.
   dind:
     image: docker:29-dind
     privileged: true

@@ -1,2 +1,13 @@
 # Test passwords and tokens of the local sandbox
 sandbox/.env
+
+# Tour videos, cache and TTS voices
+tour/build/
+tour/voices/
+__pycache__/
+
+# Terraform state, variables and build output of the cloud launcher
+cloud/terraform/.terraform/
+cloud/terraform/*.tfstate*
+cloud/terraform/terraform.tfvars
+cloud/terraform/build/

@@ -11,6 +11,7 @@ Usage:
 import argparse
 import base64
 import json
+import os
 import secrets
 import subprocess
 import sys
@@ -195,9 +196,23 @@ def main():
     register_runner()
 
 
+def env_name(user):
+    """Return the name of the .env variable for the password of a user."""
+    return f"{user.upper().replace('-', '_')}_PASSWORD"
+
+
+def preset_password(user):
+    """Return the password from IOSS_<USER>_PASSWORD, else a random one.
+
+    The cloud launcher sets IOSS_NEWCOMER_PASSWORD, so it can show the
+    password to the learner.
+    """
+    return os.environ.get(f"IOSS_{env_name(user)}") or secrets.token_urlsafe(12)
+
+
 def populate(source):
     """Create the actors, the repository and the issues."""
-    passwords = {name: secrets.token_urlsafe(12) for name in [ADMIN, *ACTORS]}
+    passwords = {name: preset_password(name) for name in [ADMIN, *ACTORS]}
     forgejo_cli(
         "admin", "user", "create", "--admin",
         "--username", ADMIN,
@@ -264,9 +279,7 @@ def populate(source):
         print(f"Created issue #{issue['number']}: {meta['title']}")
 
     lines = [f"FORGEJO_URL={URL}", f"ADMIN_TOKEN={token}"]
-    lines += [
-        f"{n.upper().replace('-', '_')}_PASSWORD={p}" for n, p in passwords.items()
-    ]
+    lines += [f"{env_name(n)}={p}" for n, p in passwords.items()]
     ENV_FILE.write_text("\n".join(lines) + "\n")
     ENV_FILE.chmod(0o600)
     print(f"Wrote the test passwords to {ENV_FILE}")
