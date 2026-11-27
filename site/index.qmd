@@ -1,0 +1,56 @@
+---
+title: "IOSS: Interactive Open Source Simulator"
+subtitle: "Learn to contribute to research software. Play through real workflows in a safe sandbox, with humans first and LLMs as backup."
+toc: false
+---
+
+## Why IOSS
+
+Your first contribution to a research software project is hard.
+
+- **The technical side:** you set up the environment, find your way in the code and understand the dependencies.
+- **The social side:** you learn who does what, how issues, pull requests and reviews work, and what reviewers expect.
+
+The documentation is often scattered. It assumes knowledge that a newcomer does not have yet. Feedback from peers and mentors is slow, so many learners ask an LLM and stop talking to people.
+
+IOSS turns a real research software repository into a practice ground. You play the newcomer in a simulated community. Nothing that you do reaches the real project.
+
+## How it works
+
+::: {.grid}
+
+::: {.g-col-12 .g-col-md-4}
+### 1. The repository
+
+A guided tour shows you the files of the project: the README, the license, the contribution guidelines. Then you set up the environment and explore the code.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### 2. The community
+
+A local Git forge runs the workflow: issue, branch, pull request, review, revision, merge. Other people play the maintainer and the reviewer. When nobody is available, a bot or an LLM plays the role.
+:::
+
+::: {.g-col-12 .g-col-md-4}
+### 3. The reflection
+
+A shared learning notebook links each step to a learning goal. After each milestone, it asks you a question. Peers and mentors comment on your answers.
+:::
+
+:::
+
+## Human to human first
+
+The LLM is a stand-in and a helper. It is never the main way that people talk to each other. Peers fill the roles first. Only humans give the feedback that counts.
+
+## Status
+
+IOSS is a hackathon prototype. It has one practice repository, [tinystats](https://github.com/florence-bockting/tinystats), and one scenario: [your first contribution](scenarios.qmd).
+
+The prototype has:
+
+- A local [Forgejo](https://forgejo.org/) sandbox with CI
+- A guided tour of the repository
+- A quest issue that gives you the tasks and ticks them when you finish them
+
+[Get started](get-started.qmd){.btn .btn-primary}
